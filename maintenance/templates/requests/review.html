@@ -1,0 +1,20 @@
+{% extends 'master.html' %}
+{% block title %}Review {{ r.ticket_no }}{% endblock %}
+{% block heading %}Review Request {{ r.ticket_no }}{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card"><div class="card-header">Request details</div><div class="card-body">
+    <p class="mb-1"><strong>{{ r.title }}</strong></p>
+    <p style="white-space:pre-line">{{ r.description }}</p>
+    <div class="small"><strong>Computer:</strong> {{ r.computer }}<br><strong>Category:</strong> {{ r.category }}<br><strong>Requested by:</strong> {{ r.requested_by }}</div>
+  </div></div></div>
+  <div class="col-lg-6"><div class="card"><div class="card-header">Set priority and assign</div><div class="card-body">
+    <form method="post">{% csrf_token %}
+      {% include 'partials/form_fields.html' %}
+      <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      <button name="action" value="reject" class="btn btn-danger">Reject</button>
+      <button name="action" value="approve" class="btn btn-main">Approve and Assign</button>
+    </form>
+  </div></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'master.html' %}
+{% block title %}Edit Request{% endblock %}
+{% block heading %}Edit Request {{ r.ticket_no }}{% endblock %}
+{% block content %}
+{% if r.status == 'rejected' %}<div class="alert alert-danger">This request was rejected: {{ r.review_note }}. Edit it and save to send it again.</div>{% endif %}
+<div class="card" style="max-width:720px">
+  <div class="card-header">Edit request</div>
+  <div class="card-body">
+    <form method="post">{% csrf_token %}
+      {% include 'partials/form_fields.html' %}
+      <a href="{% url 'request_detail' r.pk %}" class="btn btn-outline-secondary">Cancel</a>
+      <button class="btn btn-main">Save Changes</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

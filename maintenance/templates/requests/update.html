@@ -1,0 +1,20 @@
+{% extends 'master.html' %}
+{% block title %}Update {{ r.ticket_no }}{% endblock %}
+{% block heading %}Repair Update: {{ r.ticket_no }}{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-6"><div class="card"><div class="card-header">Assigned request</div><div class="card-body">
+    <p class="mb-1"><strong>{{ r.title }}</strong> <span class="badge bg-{{ r.priority_badge }}">{{ r.get_priority_display }}</span></p>
+    <p style="white-space:pre-line">{{ r.description }}</p>
+    <div class="small"><strong>Computer:</strong> {{ r.computer }}<br><strong>Requested by:</strong> {{ r.requested_by }}<br>
+      <strong>Current status:</strong> <span class="badge bg-{{ r.status_badge }}">{{ r.get_status_display }}</span></div>
+  </div></div></div>
+  <div class="col-lg-6"><div class="card"><div class="card-header">Update status</div><div class="card-body">
+    <form method="post">{% csrf_token %}
+      {% include 'partials/form_fields.html' %}
+      <a href="{% url 'request_detail' r.pk %}" class="btn btn-outline-secondary">Cancel</a>
+      <button class="btn btn-main">Save Update</button>
+    </form>
+  </div></div></div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends 'master.html' %}
+{% block title %}Requests{% endblock %}
+{% block heading %}{% if user.role == 'technician' %}My Jobs{% elif user.role == 'requester' %}My Requests{% else %}Manage Requests{% endif %}{% endblock %}
+{% block content %}
+<div class="card mb-3"><div class="card-body">
+  <form method="get" class="row g-2">
+    <div class="col-md-5"><input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search ticket, title or computer"></div>
+    <div class="col-md-4">
+      <select name="status" class="form-select">
+        <option value="">All statuses</option>
+        {% for key, label in statuses %}<option value="{{ key }}" {% if status == key %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3 d-flex gap-2">
+      <button class="btn btn-main flex-fill">Filter</button>
+      {% if user.role != 'technician' %}<a class="btn btn-outline-secondary" href="{% url 'request_add' %}">+ New</a>{% endif %}
+    </div>
+  </form>
+</div></div>
+
+<div class="card">
+  <div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+    <thead><tr>
+      <th>Ticket</th><th>Title</th>{% if user.role != 'requester' %}<th>Requested By</th>{% endif %}
+      <th>Computer</th><th>Category</th><th>Priority</th><th>Status</th><th>Date</th><th>Action</th>
+    </tr></thead>
+    <tbody>
+    {% for r in page %}
+      <tr>
+        <td>{{ r.ticket_no }}</td><td>{{ r.title }}</td>
+        {% if user.role != 'requester' %}<td>{{ r.requested_by }}</td>{% endif %}
+        <td>{{ r.computer.property_no }}<div class="text-muted small">{{ r.computer.location }}</div></td>
+        <td>{{ r.category }}</td>
+        <td><span class="badge bg-{{ r.priority_badge }}">{{ r.get_priority_display }}</span></td>
+        <td><span class="badge bg-{{ r.status_badge }}">{{ r.get_status_display }}</span></td>
+        <td>{{ r.created_at|date:"M d, Y" }}</td>
+        <td class="text-nowrap"><a href="{% url 'request_detail' r.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
+          {% if user.role == 'admin' and r.status == 'pending' %}<a href="{% url 'request_review' r.pk %}" class="btn btn-sm btn-main">Review</a>{% endif %}
+          {% if user.role == 'technician' and r.status == 'assigned' or user.role == 'technician' and r.status == 'in_progress' or user.role == 'technician' and r.status == 'on_hold' %}<a href="{% url 'request_update' r.pk %}" class="btn btn-sm btn-main">Update</a>{% endif %}
+        </td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="9" class="text-center text-muted py-4">No requests found.</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</div>
+
+{% if page.has_other_pages %}
+<nav class="mt-3"><ul class="pagination">
+  {% if page.has_previous %}<li class="page-item"><a class="page-link" href="?page={{ page.previous_page_number }}&status={{ status }}&q={{ q }}">Previous</a></li>{% endif %}
+  <li class="page-item disabled"><span class="page-link">Page {{ page.number }} of {{ page.paginator.num_pages }}</span></li>
+  {% if page.has_next %}<li class="page-item"><a class="page-link" href="?page={{ page.next_page_number }}&status={{ status }}&q={{ q }}">Next</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

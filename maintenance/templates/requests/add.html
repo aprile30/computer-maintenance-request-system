@@ -1,0 +1,15 @@
+{% extends 'master.html' %}
+{% block title %}New Request{% endblock %}
+{% block heading %}New Maintenance Request{% endblock %}
+{% block content %}
+<div class="card" style="max-width:720px">
+  <div class="card-header">Report a computer problem</div>
+  <div class="card-body">
+    <form method="post">{% csrf_token %}
+      {% include 'partials/form_fields.html' %}
+      <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      <button class="btn btn-main">Submit Request</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

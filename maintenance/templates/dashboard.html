@@ -1,0 +1,50 @@
+{% extends 'master.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block heading %}
+  {% if user.role == 'admin' %}Administrator Dashboard{% elif user.role == 'technician' %}Technician Dashboard{% else %}Requester Dashboard{% endif %}
+{% endblock %}
+{% block content %}
+<div class="row g-3 mb-4">
+  <div class="col-6 col-lg-3"><div class="card stat-card"><div class="card-body"><div class="text-muted small">TOTAL REQUESTS</div><div class="num">{{ total }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat-card"><div class="card-body"><div class="text-muted small">PENDING</div><div class="num">{{ pending }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat-card"><div class="card-body"><div class="text-muted small">IN PROGRESS</div><div class="num">{{ active }}</div></div></div></div>
+  <div class="col-6 col-lg-3"><div class="card stat-card"><div class="card-body"><div class="text-muted small">COMPLETED</div><div class="num">{{ done }}</div></div></div></div>
+</div>
+
+<div class="mb-4">
+  {% if user.role == 'requester' or user.role == 'admin' %}<a href="{% url 'request_add' %}" class="btn btn-main me-2"><i class="bi bi-plus-circle me-1"></i>New Request</a>{% endif %}
+  <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">{% if user.role == 'technician' %}View My Jobs{% elif user.role == 'admin' %}Review Submissions{% else %}View My Requests{% endif %}</a>
+</div>
+
+{% if user.role == 'admin' and to_review %}
+<div class="card mb-4">
+  <div class="card-header">Waiting for your review</div>
+  <div class="table-responsive"><table class="table mb-0 align-middle">
+    <thead><tr><th>Ticket</th><th>Title</th><th>Submitted By</th><th>Computer</th><th></th></tr></thead>
+    <tbody>
+    {% for r in to_review %}
+      <tr><td>{{ r.ticket_no }}</td><td>{{ r.title }}</td><td>{{ r.requested_by }}</td><td>{{ r.computer.property_no }}</td>
+          <td class="text-end"><a class="btn btn-sm btn-main" href="{% url 'request_review' r.pk %}">Review</a></td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-header">Recent Requests</div>
+  <div class="table-responsive"><table class="table mb-0 align-middle">
+    <thead><tr><th>Ticket</th><th>Title</th><th>Computer</th><th>Priority</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+    {% for r in recent %}
+      <tr>
+        <td>{{ r.ticket_no }}</td><td>{{ r.title }}</td><td>{{ r.computer.property_no }}</td>
+        <td><span class="badge bg-{{ r.priority_badge }}">{{ r.get_priority_display }}</span></td>
+        <td><span class="badge bg-{{ r.status_badge }}">{{ r.get_status_display }}</span></td>
+        <td class="text-end"><a href="{% url 'request_detail' r.pk %}" class="btn btn-sm btn-outline-secondary">View</a></td>
+      </tr>
+    {% empty %}
+      <tr><td colspan="6" class="text-center text-muted py-4">No requests yet.</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+</div>
+{% endblock %}

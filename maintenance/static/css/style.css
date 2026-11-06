@@ -1,0 +1,20 @@
+body { background: #f4f6fb; }
+.sidebar { width: 240px; min-height: 100vh; background: #1F3864; color: #fff; position: sticky; top: 0; align-self: flex-start; height: 100vh; overflow-y: auto; }
+.sidebar .brand { padding: 1.1rem 1rem; font-weight: 700; border-bottom: 1px solid rgba(255,255,255,.15); line-height: 1.2; }
+.sidebar .brand small { display: block; font-weight: 400; opacity: .75; font-size: .75rem; }
+.sidebar .menu-label { font-size: .7rem; letter-spacing: .08em; opacity: .6; padding: 1rem 1rem .3rem; }
+.sidebar a.nav-link { color: #dbe6f5; padding: .55rem 1rem; border-radius: 0; }
+.sidebar a.nav-link:hover { background: rgba(255,255,255,.1); color: #fff; }
+.sidebar a.nav-link.active { background: #2E75B6; color: #fff; font-weight: 600; }
+.sidebar .logout { border-top: 1px solid rgba(255,255,255,.15); padding: 1rem; }
+.content { min-width: 0; }
+.topbar { background: #fff; border-bottom: 1px solid #dde3ee; padding: .7rem 1.5rem; }
+.page { padding: 1.5rem; }
+.stat-card { border: 0; border-left: 5px solid #2E75B6; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+.stat-card .num { font-size: 2rem; font-weight: 700; color: #1F3864; }
+.card-header { background: #1F3864; color: #fff; font-weight: 600; }
+.table thead th { background: #EAF1FB; color: #1F3864; white-space: nowrap; }
+.btn-main { background: #1F3864; color: #fff; }
+.btn-main:hover { background: #2E75B6; color: #fff; }
+.login-wrap { min-height: 100vh; background: #1F3864; display: flex; align-items: center; justify-content: center; }
+.login-card { width: 100%; max-width: 380px; }

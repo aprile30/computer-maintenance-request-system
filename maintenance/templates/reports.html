@@ -1,0 +1,15 @@
+{% extends 'master.html' %}
+{% block title %}Reports{% endblock %}
+{% block heading %}Reports{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-md-6"><div class="card"><div class="card-header">Requests by Status</div>
+    <table class="table mb-0"><tbody>{% for label, n in by_status %}<tr><td>{{ label }}</td><td class="text-end fw-semibold">{{ n }}</td></tr>{% endfor %}</tbody></table></div></div>
+  <div class="col-md-6"><div class="card"><div class="card-header">Requests by Category</div>
+    <table class="table mb-0"><tbody>{% for c in by_category %}<tr><td>{{ c.name }}</td><td class="text-end fw-semibold">{{ c.n }}</td></tr>{% empty %}<tr><td class="text-muted">No data.</td></tr>{% endfor %}</tbody></table></div></div>
+  <div class="col-md-6"><div class="card"><div class="card-header">Requests by Location</div>
+    <table class="table mb-0"><tbody>{% for l in by_location %}<tr><td>{{ l.name }}</td><td class="text-end fw-semibold">{{ l.n }}</td></tr>{% empty %}<tr><td class="text-muted">No data.</td></tr>{% endfor %}</tbody></table></div></div>
+  <div class="col-md-6"><div class="card"><div class="card-header">Jobs per Technician</div>
+    <table class="table mb-0"><tbody>{% for t in by_tech %}<tr><td>{{ t }}</td><td class="text-end fw-semibold">{{ t.n }}</td></tr>{% empty %}<tr><td class="text-muted">No technicians yet.</td></tr>{% endfor %}</tbody></table></div></div>
+</div>
+{% endblock %}

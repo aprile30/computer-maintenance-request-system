@@ -1,0 +1,12 @@
+{% extends 'master.html' %}
+{% block title %}Delete Request{% endblock %}
+{% block heading %}Delete Request{% endblock %}
+{% block content %}
+<div class="card" style="max-width:560px"><div class="card-body">
+  <p>Are you sure you want to delete request <strong>{{ r.ticket_no }}</strong> ({{ r.title }})? This cannot be undone.</p>
+  <form method="post">{% csrf_token %}
+    <a href="{% url 'request_detail' r.pk %}" class="btn btn-outline-secondary">Cancel</a>
+    <button class="btn btn-danger">Yes, delete</button>
+  </form>
+</div></div>
+{% endblock %}

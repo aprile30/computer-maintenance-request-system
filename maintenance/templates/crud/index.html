@@ -1,0 +1,25 @@
+{% extends 'master.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block heading %}{{ title }}{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+  <form method="get" class="d-flex gap-2">
+    <input type="text" name="q" value="{{ q }}" class="form-control" placeholder="Search">
+    <button class="btn btn-outline-secondary">Search</button>
+  </form>
+  <a href="{% url 'crud_add' key %}" class="btn btn-main"><i class="bi bi-plus-circle me-1"></i>Add</a>
+</div>
+<div class="card"><div class="table-responsive"><table class="table table-hover mb-0 align-middle">
+  <thead><tr>{% for h in headers %}<th>{{ h }}</th>{% endfor %}<th class="text-end">Action</th></tr></thead>
+  <tbody>
+  {% for obj, cells in rows %}
+    <tr>{% for c in cells %}<td>{{ c }}</td>{% endfor %}
+      <td class="text-end text-nowrap">
+        <a href="{% url 'crud_edit' key obj.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+        <a href="{% url 'crud_delete' key obj.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </td></tr>
+  {% empty %}
+    <tr><td colspan="{{ headers|length|add:1 }}" class="text-center text-muted py-4">No records yet.</td></tr>
+  {% endfor %}
+  </tbody></table></div></div>
+{% endblock %}

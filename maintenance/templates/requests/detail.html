@@ -1,0 +1,73 @@
+{% extends 'master.html' %}
+{% block title %}{{ r.ticket_no }}{% endblock %}
+{% block heading %}Request {{ r.ticket_no }}{% endblock %}
+{% block content %}
+<div class="row g-3">
+  <div class="col-lg-8">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between"><span>{{ r.title }}</span>
+        <span class="badge bg-{{ r.status_badge }}">{{ r.get_status_display }}</span></div>
+      <div class="card-body">
+        <p style="white-space:pre-line">{{ r.description }}</p>
+        <hr>
+        <div class="row small">
+          <div class="col-md-6 mb-2"><strong>Computer:</strong> {{ r.computer }}</div>
+          <div class="col-md-6 mb-2"><strong>Category:</strong> {{ r.category }}</div>
+          <div class="col-md-6 mb-2"><strong>Requested by:</strong> {{ r.requested_by }}</div>
+          <div class="col-md-6 mb-2"><strong>Assigned to:</strong> {{ r.assigned_to|default:"Not yet assigned" }}</div>
+          <div class="col-md-6 mb-2"><strong>Priority:</strong> <span class="badge bg-{{ r.priority_badge }}">{{ r.get_priority_display }}</span></div>
+          <div class="col-md-6 mb-2"><strong>Submitted:</strong> {{ r.created_at|date:"M d, Y h:i A" }}</div>
+          {% if r.completed_at %}<div class="col-md-6 mb-2"><strong>Completed:</strong> {{ r.completed_at|date:"M d, Y h:i A" }}</div>{% endif %}
+        </div>
+        {% if r.review_note %}<div class="alert alert-secondary mt-2 mb-0"><strong>Administrator note:</strong> {{ r.review_note }}</div>{% endif %}
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">Status History</div>
+      <div class="table-responsive"><table class="table mb-0">
+        <thead><tr><th>Date</th><th>By</th><th>Change</th><th>Remarks</th></tr></thead>
+        <tbody>
+        {% for u in updates %}
+          <tr><td class="text-nowrap">{{ u.created_at|date:"M d, h:i A" }}</td><td>{{ u.updated_by }}</td>
+              <td class="text-nowrap">{% if u.old_status %}{{ u.old_status }} &rarr; {% endif %}{{ u.new_status }}</td><td>{{ u.remarks }}</td></tr>
+        {% endfor %}
+        </tbody></table></div>
+    </div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card"><div class="card-header">Actions</div><div class="card-body d-grid gap-2">
+      <a href="{% url 'request_list' %}" class="btn btn-outline-secondary">Back to list</a>
+
+      {% if user.role == 'admin' and r.status == 'pending' %}
+        <a href="{% url 'request_review' r.pk %}" class="btn btn-main">Review and Assign</a>
+      {% endif %}
+
+      {% if r.requested_by_id == user.id and r.status == 'pending' or r.requested_by_id == user.id and r.status == 'rejected' %}
+        <a href="{% url 'request_edit' r.pk %}" class="btn btn-outline-primary">Edit Request</a>
+      {% endif %}
+
+      {% if r.assigned_to_id == user.id and user.role == 'technician' %}
+        {% if r.status == 'assigned' or r.status == 'in_progress' or r.status == 'on_hold' %}
+          <a href="{% url 'request_update' r.pk %}" class="btn btn-main">Update Repair Status</a>
+        {% endif %}
+      {% endif %}
+
+      {% if user.role == 'admin' or r.requested_by_id == user.id and r.status == 'pending' %}
+        <a href="{% url 'request_delete' r.pk %}" class="btn btn-outline-danger">Delete</a>
+      {% endif %}
+    </div></div>
+
+    {% if r.status == 'completed' and r.requested_by_id == user.id %}
+    <div class="card mt-3 border-success"><div class="card-header bg-success">Confirm the repair</div><div class="card-body">
+      <form method="post" action="{% url 'request_confirm' r.pk %}">{% csrf_token %}
+        <textarea name="remarks" rows="2" class="form-control mb-2" placeholder="Optional remarks"></textarea>
+        <button name="action" value="confirm" class="btn btn-success w-100 mb-2">Problem fixed, close request</button>
+        <button name="action" value="notfixed" class="btn btn-outline-danger w-100">Not fixed, send back</button>
+      </form>
+    </div></div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
