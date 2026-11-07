@@ -4,19 +4,30 @@ Project folder: `cmrs`  |  Django project: `config`  |  App: `maintenance`
 
 ## Run it (step by step)
 1. Open the `cmrs` folder in PyCharm (or VS Code).
-2. Open the terminal and create the virtual environment:
-       python -m venv .venv
-       .venv\Scripts\activate
-3. Install Django:
-       pip install -r requirements.txt
-4. Create the database tables:
-       python manage.py makemigrations maintenance
-       python manage.py migrate
-5. Add demo accounts and sample records:
-       python manage.py seed
-6. Start the server:
-       python manage.py runserver
-7. Open http://127.0.0.1:8000/ and log in.
+2. Create and activate the virtual environment:
+```
+python -m venv .venv
+.venv\Scripts\activate
+```
+3. Install the packages:
+```
+pip install -r requirements.txt
+```
+4. Start Apache and MySQL in XAMPP, then create an empty database named `cmrs_db` in phpMyAdmin. The database settings are in `config/settings.py`.
+5. Create the database tables:
+```
+python manage.py makemigrations maintenance
+python manage.py migrate
+```
+6. Add the demo accounts and sample records:
+```
+python manage.py seed
+```
+7. Start the server:
+```
+python manage.py runserver
+```
+8. Open http://127.0.0.1:8000/ and log in.
 
 | Role | Username | Password |
 |---|---|---|
